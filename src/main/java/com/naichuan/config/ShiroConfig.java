@@ -13,6 +13,7 @@ import org.apache.shiro.spring.config.ShiroBeanConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,10 +49,10 @@ public class ShiroConfig {
 
     @Bean
     public SecurityManager securityManager() {
-        DefaultSecurityManager securityManager = new DefaultSecurityManager();
-        securityManager.setRealm(realm());
-        securityManager.setCacheManager(cacheManager());
-        return securityManager;
+        DefaultWebSecurityManager webSecurityManager = new DefaultWebSecurityManager();
+        webSecurityManager.setRealm(realm());
+        webSecurityManager.setCacheManager(cacheManager());
+        return webSecurityManager;
     }
 
     @Bean

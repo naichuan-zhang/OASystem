@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="generator.mapper.SysLoginMapper">
+<mapper namespace="com.naichuan.mapper.SysLoginMapper">
 
-    <resultMap id="BaseResultMap" type="generator.entity.SysLogin">
+    <resultMap id="BaseResultMap" type="com.naichuan.entity.SysLogin">
             <id property="loginId" column="login_id" jdbcType="INTEGER"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
@@ -16,4 +16,13 @@
         login_id,username,password,
         email,wxname
     </sql>
+
+    <select id="selectByUsername" resultMap="BaseResultMap" parameterType="string">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_login
+        where username = #{username,jdbcType=VARCHAR}
+    </select>
+
+
 </mapper>

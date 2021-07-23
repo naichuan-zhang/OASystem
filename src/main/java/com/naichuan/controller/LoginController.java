@@ -1,5 +1,6 @@
 package com.naichuan.controller;
 
+import com.naichuan.entity.SysLogin;
 import com.naichuan.service.SysLoginService;
 import com.naichuan.utils.MD5Utils;
 import org.apache.shiro.SecurityUtils;
@@ -37,11 +38,14 @@ public class LoginController {
         String sessionVerificationCode = "0000";
         if (sessionVerificationCode != null && sessionVerificationCode.equals(verificationCode)) {
             session.setAttribute("verificationCode", MD5Utils.md5(Math.random() + ""));
+            password = MD5Utils.md5(password);
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             Subject subject = SecurityUtils.getSubject();
             try {
                 subject.login(token);
-
+                SysLogin sysLogin = userLoginService.selectByUsername(username);
+                session.setAttribute("username", sysLogin.getUsername());
+                session.setAttribute("loginEntity", sysLogin);
             } catch (IncorrectCredentialsException e) {
                 msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";
                 model.addAttribute("message", msg);
