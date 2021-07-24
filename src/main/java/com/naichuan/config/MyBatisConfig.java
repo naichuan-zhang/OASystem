@@ -1,15 +1,13 @@
 package com.naichuan.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
-import org.springframework.context.EnvironmentAware;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -24,30 +22,20 @@ import java.util.List;
  * @author Naichuan Zhang
  */
 @Configuration
-@PropertySource("classpath:jdbc.properties")
-public class MyBatisConfig implements EnvironmentAware {
+public class MyBatisConfig implements ApplicationContextAware {
 
-    private Environment environment;
+    private ApplicationContext appContext;
 
     @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
-    @Bean
-    public DataSource dataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setDriverClassName(environment.getProperty("jdbc.driver"));
-        dataSource.setUrl(environment.getProperty("jdbc.url"));
-        dataSource.setUsername(environment.getProperty("jdbc.username"));
-        dataSource.setPassword(environment.getProperty("jdbc.password"));
-        return dataSource;
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.appContext = applicationContext;
     }
 
     @Bean
     public SqlSessionFactory sqlSessionFactory() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(dataSource());
+        DataSource dataSource = appContext.getBean(DataSource.class);
+        factoryBean.setDataSource(dataSource);
         factoryBean.setMapperLocations(resolveMapperLocations("classpath*:mapper/*.xml"));
         factoryBean.setTypeAliasesPackage("com.naichuan.entity");
         return factoryBean.getObject();
