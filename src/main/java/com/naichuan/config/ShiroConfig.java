@@ -1,19 +1,21 @@
 package com.naichuan.config;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.Md5CredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
-import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration;
 import org.apache.shiro.spring.config.ShiroBeanConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +45,11 @@ public class ShiroConfig {
     }
 
     @Bean
+    public CredentialsMatcher credentialsMatcher() {
+        return new Md5CredentialsMatcher();
+    }
+
+    @Bean
     public CacheManager cacheManager() {
         return new MemoryConstrainedCacheManager();
     }
@@ -59,7 +66,8 @@ public class ShiroConfig {
     public Realm realm() {
         JdbcRealm realm = new JdbcRealm();
         realm.setDataSource(dataSource);
-        realm.setCredentialsMatcher(new Md5CredentialsMatcher());
+        realm.setPermissionsLookupEnabled(true);
+        realm.setCredentialsMatcher(credentialsMatcher());
         realm.setCacheManager(cacheManager());
         realm.setAuthenticationQuery("select password from sys_login where username = ?");
         realm.setUserRolesQuery("select role_name from sys_login_role slr " +
@@ -81,5 +89,15 @@ public class ShiroConfig {
         factoryBean.setSuccessUrl("/index");
         factoryBean.setUnauthorizedUrl("/");
         return factoryBean;
+    }
+
+    @Bean
+    public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+
+    @Bean
+    public static DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        return new DefaultAdvisorAutoProxyCreator();
     }
 }

@@ -10,6 +10,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +39,6 @@ public class LoginController {
         String sessionVerificationCode = "0000";
         if (sessionVerificationCode != null && sessionVerificationCode.equals(verificationCode)) {
             session.setAttribute("verificationCode", MD5Utils.md5(Math.random() + ""));
-            password = MD5Utils.md5(password);
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             Subject subject = SecurityUtils.getSubject();
             try {
@@ -46,6 +46,7 @@ public class LoginController {
                 SysLogin sysLogin = userLoginService.selectByUsername(username);
                 session.setAttribute("username", sysLogin.getUsername());
                 session.setAttribute("loginEntity", sysLogin);
+                mav.setViewName("redirect:/index");
             } catch (IncorrectCredentialsException e) {
                 msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";
                 model.addAttribute("message", msg);
@@ -85,6 +86,16 @@ public class LoginController {
         } else {
             mav.addObject("msg", "验证码错误！");
             mav.setViewName("redirect:/index.jsp");
+        }
+        return mav;
+    }
+
+    @GetMapping("/logout")
+    public ModelAndView logout() {
+        ModelAndView mav = new ModelAndView("redirect:/index.jsp");
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            subject.logout();
         }
         return mav;
     }
