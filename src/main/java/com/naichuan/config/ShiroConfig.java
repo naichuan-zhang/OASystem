@@ -1,5 +1,6 @@
 package com.naichuan.config;
 
+import com.naichuan.filter.ShiroLogoutFilter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.Md5CredentialsMatcher;
@@ -63,6 +64,11 @@ public class ShiroConfig {
     }
 
     @Bean
+    public ShiroLogoutFilter shiroLogoutFilter() {
+        return new ShiroLogoutFilter();
+    }
+
+    @Bean
     public Realm realm() {
         JdbcRealm realm = new JdbcRealm();
         realm.setDataSource(dataSource);
@@ -88,6 +94,8 @@ public class ShiroConfig {
         factoryBean.setLoginUrl("/login.jsp");
         factoryBean.setSuccessUrl("/index");
         factoryBean.setUnauthorizedUrl("/");
+//        factoryBean.getFilters().put("logout", shiroLogoutFilter());
+//        factoryBean.getFilterChainDefinitionMap().put("/login/logout", "logout");
         return factoryBean;
     }
 

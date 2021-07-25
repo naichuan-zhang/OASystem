@@ -14,7 +14,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.naichuan.controller")
+@ComponentScan(basePackages = {"com.naichuan.controller"})
 public class WebConfig implements WebMvcConfigurer {
 
     @Bean

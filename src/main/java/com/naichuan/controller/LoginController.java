@@ -43,10 +43,12 @@ public class LoginController {
             Subject subject = SecurityUtils.getSubject();
             try {
                 subject.login(token);
-                SysLogin sysLogin = userLoginService.selectByUsername(username);
-                session.setAttribute("username", sysLogin.getUsername());
-                session.setAttribute("loginEntity", sysLogin);
-                mav.setViewName("redirect:/index");
+                if (subject.isAuthenticated()) {
+                    SysLogin sysLogin = userLoginService.selectByUsername(username);
+                    session.setAttribute("username", sysLogin.getUsername());
+                    session.setAttribute("loginEntity", sysLogin);
+                    mav.setViewName("redirect:/index");
+                }
             } catch (IncorrectCredentialsException e) {
                 msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";
                 model.addAttribute("message", msg);

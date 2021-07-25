@@ -8,6 +8,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import javax.sql.DataSource;
 import java.text.SimpleDateFormat;
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat;
  */
 @Configuration
 @ComponentScan(basePackages = "com.naichuan", excludeFilters = {
-        @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Controller.class)
+        @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Controller.class),
 })
 public class AppConfig {
 
