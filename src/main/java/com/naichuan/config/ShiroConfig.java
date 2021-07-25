@@ -1,6 +1,5 @@
 package com.naichuan.config;
 
-import com.naichuan.filter.ShiroLogoutFilter;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.Md5CredentialsMatcher;
@@ -9,14 +8,12 @@ import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
-import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.config.ShiroAnnotationProcessorConfiguration;
 import org.apache.shiro.spring.config.ShiroBeanConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.apache.shiro.spring.web.config.ShiroWebFilterConfiguration;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,34 +37,6 @@ public class ShiroConfig {
     @Autowired
     private DataSource dataSource;
 
-    @PostConstruct
-    private void initStaticSecurityManager() {
-        SecurityUtils.setSecurityManager(securityManager());
-    }
-
-    @Bean
-    public CredentialsMatcher credentialsMatcher() {
-        return new Md5CredentialsMatcher();
-    }
-
-    @Bean
-    public CacheManager cacheManager() {
-        return new MemoryConstrainedCacheManager();
-    }
-
-    @Bean
-    public SecurityManager securityManager() {
-        DefaultWebSecurityManager webSecurityManager = new DefaultWebSecurityManager();
-        webSecurityManager.setRealm(realm());
-        webSecurityManager.setCacheManager(cacheManager());
-        return webSecurityManager;
-    }
-
-    @Bean
-    public ShiroLogoutFilter shiroLogoutFilter() {
-        return new ShiroLogoutFilter();
-    }
-
     @Bean
     public Realm realm() {
         JdbcRealm realm = new JdbcRealm();
@@ -87,25 +56,36 @@ public class ShiroConfig {
         return realm;
     }
 
-    @Bean
+    @Bean("shiroFilterFactoryBean")
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
-        factoryBean.setSecurityManager(securityManager());
-        factoryBean.setLoginUrl("/login.jsp");
-        factoryBean.setSuccessUrl("/index");
+        factoryBean.setLoginUrl("/");
+        factoryBean.setSuccessUrl("/home");
         factoryBean.setUnauthorizedUrl("/");
-//        factoryBean.getFilters().put("logout", shiroLogoutFilter());
-//        factoryBean.getFilterChainDefinitionMap().put("/login/logout", "logout");
+        factoryBean.setSecurityManager(securityManager());
         return factoryBean;
     }
 
     @Bean
-    public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
+    public SecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(realm());
+        securityManager.setCacheManager(cacheManager());
+        return securityManager;
+    }
+
+    @PostConstruct
+    private void initStaticSecurityManager() {
+        SecurityUtils.setSecurityManager(securityManager());
     }
 
     @Bean
-    public static DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        return new DefaultAdvisorAutoProxyCreator();
+    public CredentialsMatcher credentialsMatcher() {
+        return new Md5CredentialsMatcher();
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new MemoryConstrainedCacheManager();
     }
 }

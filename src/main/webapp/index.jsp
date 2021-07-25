@@ -117,6 +117,11 @@
         </div>
         <div class="login-content">
             <div class="form">
+                <p class="col-xs-12">
+                    <span style="color: red;">
+                        ${message}
+                    </span>
+                </p>
                 <form id="loginForm" action="${pageContext.request.contextPath}/login/verification.do" method="post">
                     <div class="form-group">
                         <div class="col-xs-12">

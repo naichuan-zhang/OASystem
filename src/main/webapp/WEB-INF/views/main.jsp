@@ -40,7 +40,7 @@
             <div id="personInfo">
                 <p id="username">${loginEntity.wxname}</p>
                 <p>${loginEntity.email}</p>
-                <p><a href="${pageContext.request.contextPath}/login/logout">退出登录</a></p>
+                <p><a href="${pageContext.request.contextPath}/login/logout.do">退出登录</a></p>
             </div>
             <div style="height: 1px; background-color: #fff;"></div>
             <ul class="nav nav-pills nav-stacked">
@@ -101,13 +101,10 @@
                         </ul>
                     </div>
                 </li>
-                <li role="role1">
-                    <a href="${pageContext.request.contextPath}/login/logout">退出登录</a>
-                </li>
             </ul>
             <div style="height: 1px; background-color: #fff;"></div>
         </div>
-        <div class="rightContent">
+        <div id="rightContent">
             <!-- INSERT CONTENT HERE -->
         </div>
     </div>
