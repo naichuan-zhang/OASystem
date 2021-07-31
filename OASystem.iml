@@ -4,6 +4,7 @@
     <facet type="Spring" name="Spring">
       <configuration>
         <fileset id="fileset" name="Spring Application Context" removed="false">
+          <dependency>fileset2</dependency>
           <file>file://$MODULE_DIR$/src/main/java/com/naichuan/config/AppConfig.java</file>
           <file>file://$MODULE_DIR$/src/main/java/com/naichuan/config/MyBatisConfig.java</file>
           <file>file://$MODULE_DIR$/src/main/java/com/naichuan/config/ShiroConfig.java</file>
@@ -11,6 +12,7 @@
         </fileset>
         <fileset id="fileset2" name="DataSourceConfig" removed="false">
           <file>file://$MODULE_DIR$/src/main/java/com/naichuan/config/DataSourceConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/naichuan/config/TransactionConfig.java</file>
         </fileset>
       </configuration>
     </facet>
