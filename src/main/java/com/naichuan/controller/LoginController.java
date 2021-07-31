@@ -3,6 +3,7 @@ package com.naichuan.controller;
 import com.naichuan.entity.SysLogin;
 import com.naichuan.service.SysLoginService;
 import com.naichuan.utils.MD5Utils;
+import com.naichuan.utils.ValidationUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -10,11 +11,13 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -62,6 +65,35 @@ public class LoginController {
         }
         model.addAttribute("message", msg);
         return "../../index";
+    }
+
+    @RequestMapping("/register.do")
+    public ModelAndView register(HttpServletRequest request, String username, String password, String repassword,
+                                 String wxname, String email) {
+        ModelAndView mav = new ModelAndView("../../index");
+        if (!StringUtils.isEmpty(username) && username.length() < 20
+                && !StringUtils.isEmpty(password) && password.equals(repassword)) {
+            long count = sysLoginService.countByUsername(username).get("count");
+            if (count == 0) {
+                SysLogin sysLogin = new SysLogin();
+                sysLogin.setUsername(username);
+                sysLogin.setPassword(MD5Utils.md5(password));
+                if (!StringUtils.isEmpty(email) && ValidationUtils.isEmail(email)) {
+                    sysLogin.setEmail(email);
+                }
+                if (!StringUtils.isEmpty(wxname)) {
+                    sysLogin.setWxname(wxname);
+                }
+                if (sysLoginService.addSelective(sysLogin) > 0) {
+                    mav.addObject("message", "注册成功！");
+                } else {
+                    mav.addObject("message", "注册失败！");
+                }
+            } else {
+                mav.addObject("message", "用户名已存在！");
+            }
+        }
+        return mav;
     }
 
     @RequestMapping("/logout.do")
