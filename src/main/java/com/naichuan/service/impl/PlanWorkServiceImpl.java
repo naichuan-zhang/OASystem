@@ -3,6 +3,7 @@ package com.naichuan.service.impl;
 import com.naichuan.entity.PlanWork;
 import com.naichuan.service.PlanWorkService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,8 @@ public class PlanWorkServiceImpl implements PlanWorkService {
                 " order by plan_createtime desc limit ?, ?";
         int pageNumber = page.orElse(0);
         int offsetNumber = offset.orElse(7);
-        return template.queryForList(sql, PlanWork.class, username, pageNumber, offsetNumber);
+        return template.query(sql, new BeanPropertyRowMapper<>(PlanWork.class),
+                username, pageNumber, offsetNumber);
     }
 
     @Override
@@ -66,8 +68,8 @@ public class PlanWorkServiceImpl implements PlanWorkService {
                 " where pw.plan_to = ? and pw.plan_flag = ? order by pw.plan_createtime desc limit ?, ?";
         int pageNumber = page.orElse(0);
         int offsetNumber = offset.orElse(7);
-        // TODO fix bug
-        return template.queryForList(sql, PlanWork.class, new Object[]{username, flag.getValue(), pageNumber, offsetNumber});
+        return template.query(sql, new BeanPropertyRowMapper<>(PlanWork.class),
+                username, flag.getValue(), pageNumber, offsetNumber);
     }
 
     @Override
@@ -76,7 +78,8 @@ public class PlanWorkServiceImpl implements PlanWorkService {
                 " where pw.plan_to = ? and pw.plan_flag <> ? order by pw.plan_createtime desc limit ?, ?";
         int pageNumber = page.orElse(0);
         int offsetNumber = offset.orElse(7);
-        return template.queryForList(sql, PlanWork.class, new Object[]{username, flag.getValue(), pageNumber, offsetNumber});
+        return template.query(sql, new BeanPropertyRowMapper<>(PlanWork.class),
+                username, flag.getValue(), pageNumber, offsetNumber);
     }
 
     @Override

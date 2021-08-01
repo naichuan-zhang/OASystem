@@ -40,6 +40,7 @@
         let row = ${row};
         let lastPage = ${lastPage};
         let lastPageOver =${lastPageOver};
+        let basePath = ${pageContext.request.contextPath};
     </script>
 
     <script type="text/javascript"
@@ -107,6 +108,89 @@
         </c:choose>
         </tbody>
     </table>
+</div>
+
+<div class="modal fade" data-backdrop="false" id="rwDialog" style="z-index: 0;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span style="font-size: 12px;"><strong>工作计划申报</strong></span>
+            </div>
+            <div class="modal-body">
+                <form action="${pageContext.request.contextPath}/updatePlanWork" method="post" id="updatePlanWork">
+                    <input type="hidden" name="plan_id" id="plan_id"/>
+                    <div class="form-group">
+                        <label>计划优先级</label>
+                        <div>
+                            <a href="javascript:void(0);"><span id="starPriority1" class="glyphicon glyphicon-star"></span></a>
+                            <a href="javascript:void(0);"><span id="starPriority2" class="glyphicon glyphicon-star-empty"></span></a>
+                            <a href="javascript:void(0);"><span id="starPriority3" class="glyphicon glyphicon-star-empty"></span></a>
+                            <a href="javascript:void(0);"><span id="starPriority4" class="glyphicon glyphicon-star-empty"></span></a>
+                            <a href="javascript:void(0);"><span id="starPriority5" class="glyphicon glyphicon-star-empty"></span></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>计划复杂度</label>
+                        <div>
+                            <a href="javascript:void(0);"><span id="starComplexity1" class="glyphicon glyphicon-star"></span></a>
+                            <a href="javascript:void(0);"><span id="starComplexity2" class="glyphicon glyphicon-star-empty"></span></a>
+                            <a href="javascript:void(0);"><span id="starComplexity3" class="glyphicon glyphicon-star-empty"></span></a>
+                            <a href="javascript:void(0);"><span id="starComplexity4" class="glyphicon glyphicon-star-empty"></span></a>
+                            <a href="javascript:void(0);"><span id="starComplexity5" class="glyphicon glyphicon-star-empty"></span></a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label>预估工期</label>
+                            <input type="text" name="plan_start" id="plan_start" style="width: 160px;" readonly="readonly"/>
+                            <span>至</span>
+                            <input type="text" name="plan_end" id="plan_end" style="width: 160px;" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="plan_title">标题</label>
+                        <input type="text" class="form-control" placeholder="最多输入80个字符" id="plan_title" name="plan_title" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="plan_content">内容</label>
+                        <textarea rows="3" class="form-control" name="plan_content" id="plan_content"></textarea>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="2" name="plan_flag" checked="checked"/>
+                            同意
+                        </label>
+                        <label>
+                            <input type="radio" value="3" name="plan_flag"/>
+                            不同意
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button class="btn btn-primary" onclick="formSubmit('#updatePlanWork')">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="false" id="msgDialog" style="z-index: 0;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span style="font-size: 12px;"><strong>详细信息</strong></span>
+            </div>
+            <div class="modal-body">
+                <div id="msgContent">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
